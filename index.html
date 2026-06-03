@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SlideAI - Visualização do Layout</title>
+    <title>SlideAI - Matrix Pro</title>
     <style>
-        /* Paleta de Cores Deep Tech */
         :root {
-            --bg-deep-oil: #060b16;       /* Fundo Petróleo Escuro */
-            --bg-card: rgba(15, 23, 42, 0.65); /* Vidro Fosco Escuro */
-            --electric-blue: #00d2ff;     /* Azul Neon */
-            --tech-cyan: #00f5d4;         /* Ciano Tecnológico */
-            --text-light: #f1f5f9;        /* Texto Claro */
-            --text-muted: #94a3b8;        /* Texto Secundário */
+            --bg-deep-oil: #060b16;
+            --bg-card: rgba(15, 23, 42, 0.65);
+            --electric-blue: #00d2ff;
+            --tech-cyan: #00f5d4;
+            --text-light: #f1f5f9;
+            --text-muted: #94a3b8;
         }
 
         body {
@@ -30,247 +29,78 @@
         }
 
         header {
-            width: 100%;
-            padding: 20px 0;
-            text-align: center;
+            width: 100%; padding: 20px 0; text-align: center;
             border-bottom: 1px solid rgba(0, 210, 255, 0.15);
-            background: rgba(6, 11, 22, 0.8);
-            backdrop-filter: blur(12px);
+            background: rgba(6, 11, 22, 0.8); backdrop-filter: blur(12px);
         }
 
-        .logo {
-            margin: 0;
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-            color: var(--electric-blue);
-            text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
-        }
+        .logo { margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: 3px; color: var(--electric-blue); text-transform: uppercase; }
+        .logo span { color: var(--tech-cyan); }
 
-        .logo span {
-            color: var(--tech-cyan);
-        }
+        .container { width: 90%; max-width: 950px; margin: 40px auto; display: flex; flex-direction: column; gap: 25px; }
 
-        .container {
-            width: 90%;
-            max-width: 950px;
-            margin: 40px auto;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
+        .search-box { display: flex; background: var(--bg-card); padding: 8px 8px 8px 20px; border-radius: 14px; border: 1px solid rgba(0, 210, 255, 0.25); }
+        .search-box input { flex: 1; background: transparent; border: none; outline: none; color: white; font-size: 1.05rem; }
+        .search-box button { background: linear-gradient(135deg, var(--electric-blue), var(--tech-cyan)); border: none; padding: 14px 28px; color: #060b16; font-weight: 700; border-radius: 10px; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; }
 
-        /* Barra de Comando Estilo IA */
-        .search-box {
-            display: flex;
-            background: var(--bg-card);
-            padding: 8px 8px 8px 20px;
-            border-radius: 14px;
-            border: 1px solid rgba(0, 210, 255, 0.25);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-        }
+        .slide-stage { background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; min-height: 450px; padding: 50px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .slide-title { font-size: 2.3rem; font-weight: 700; color: white; margin: 0 0 30px 0; border-left: 6px solid var(--electric-blue); padding-left: 20px; text-transform: uppercase;}
+        .slide-body { font-size: 1.25rem; line-height: 1.8; color: var(--text-muted); }
+        .slide-body ul { padding-left: 25px; }
+        .slide-body li { margin-bottom: 12px; }
+        .slide-body li::marker { color: var(--tech-cyan); }
 
-        .search-box:focus-within {
-            border-color: var(--electric-blue);
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
-        }
+        /* Estilos adicionais para os novos layouts dinâmicos */
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .col-box { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px; border: 1px solid rgba(0,210,255,0.1); }
+        .col-box h4 { margin: 0 0 10px 0; color: var(--tech-cyan); }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: rgba(0, 210, 255, 0.1); color: var(--electric-blue); padding: 10px; text-align: left; border-bottom: 2px solid var(--electric-blue); }
+        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-light); }
 
-        .search-box input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: white;
-            font-size: 1.05rem;
-        }
+        .toolbar { display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.4); padding: 15px 30px; border-radius: 12px; }
+        .nav-buttons { display: flex; gap: 12px; }
+        .btn-action { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 210, 255, 0.25); color: var(--electric-blue); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-export { background: #3b82f6 !important; color: white !important; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; display: none; }
 
-        .search-box input::placeholder {
-            color: #64748b;
-        }
-
-        .search-box button {
-            background: linear-gradient(135deg, var(--electric-blue), var(--tech-cyan));
-            border: none;
-            padding: 14px 28px;
-            color: #060b16;
-            font-weight: 700;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-        }
-
-        .search-box button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
-        }
-
-        /* Tela de Visualização do Slide */
-        .slide-stage {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            min-height: 450px;
-            padding: 50px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .slide-stage::before {
-            content: "";
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 30px;
-            height: 30px;
-            border-top: 2px solid rgba(0, 245, 212, 0.3);
-            border-right: 2px solid rgba(0, 245, 212, 0.3);
-            pointer-events: none;
-        }
-
-        .slide-title {
-            font-size: 2.6rem;
-            font-weight: 700;
-            color: white;
-            margin: 0 0 30px 0;
-            line-height: 1.2;
-            border-left: 6px solid var(--electric-blue);
-            padding-left: 20px;
-        }
-
-        .slide-body {
-            font-size: 1.35rem;
-            line-height: 1.8;
-            color: var(--text-muted);
-        }
-
-        .slide-body ul {
-            margin: 0;
-            padding-left: 25px;
-        }
-
-        .slide-body li {
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .slide-body li::marker {
-            color: var(--tech-cyan);
-        }
-
-        /* Painel Inferior de Controle */
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(15, 23, 42, 0.4);
-            padding: 15px 30px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-action {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(0, 210, 255, 0.25);
-            color: var(--electric-blue);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .btn-action:hover {
-            background: rgba(0, 210, 255, 0.1);
-            border-color: var(--electric-blue);
-        }
-
-        .slide-counter {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-        }
-
-        /* Efeito de carregamento */
-        .loader-overlay {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-deep-oil);
-            border-radius: 20px;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 10;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(0, 210, 255, 0.1);
-            border-top-color: var(--tech-cyan);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loader-text {
-            color: var(--tech-cyan);
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-        }
+        .loader-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-deep-oil); border-radius: 20px; justify-content: center; align-items: center; flex-direction: column; gap: 15px; z-index: 10; }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(0, 210, 255, 0.1); border-top-color: var(--tech-cyan); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/PptxGenJS@3.12.0/dist/pptxgen.bundle.js"></script>
 </head>
 <body>
 
     <header>
-        <div class="logo">Slide<span>AI</span> // Matrix</div>
+        <div class="logo">Slide<span>AI</span> // Matrix Pro</div>
     </header>
 
     <div class="container">
         <div class="search-box">
-            <input type="text" id="promptInput" placeholder="Digite o tema da aula (ex: Inteligência Artificial na Educação, Clonagem Genética)...">
+            <input type="text" id="promptInput" placeholder="Digite o tema (ex: Impacto da IA na Medicina, História da Computação)...">
             <button id="btnGerar">Gerar Apresentação</button>
         </div>
 
         <div class="slide-stage" id="slideStage">
             <div class="loader-overlay" id="loader">
                 <div class="spinner"></div>
-                <div class="loader-text" id="loaderText">GeminAI processando e estruturando tópicos...</div>
+                <div style="color: var(--tech-cyan)">GeminAI estruturando apresentação profissional...</div>
             </div>
 
-            <div class="slide-title" id="slideTitle">Interface Conectada ao Gemini</div>
+            <div class="slide-title" id="slideTitle">Apresentações Avançadas</div>
             <div class="slide-body" id="slideBody">
-                <p>Insira um tema acima e clique em "Gerar". O sistema irá fazer uma requisição em tempo real para a API do Gemini, recebendo dados estruturados e montando seus slides automaticamente.</p>
+                <p>Agora a inteligência artificial criará de 6 a 10 slides contendo tabelas, colunas comparativas e referências. Ao final, você poderá baixar o arquivo editável para abrir direto no Microsoft PowerPoint!</p>
             </div>
         </div>
 
         <div class="toolbar">
-            <div class="slide-counter" id="slideCounter">SLIDE: 0 / 0</div>
+            <div id="slideCounter" style="color: var(--text-muted); font-weight: 600;">SLIDE: 0 / 0</div>
             <div class="nav-buttons">
                 <button class="btn-action" id="btnVoltar">◀ Voltar</button>
                 <button class="btn-action" id="btnAvancar">Avançar ▶</button>
+                <button class="btn-export" id="btnExportar">📥 Baixar .PPTX</button>
             </div>
         </div>
     </div>
@@ -279,75 +109,82 @@
         import { GoogleGenAI, Type } from "https://esm.run/@google/genai";
 
         // ⚠️ ADICIONE SUA CHAVE DE API DO GEMINI AQUI:
-        const API_KEY = "AQ.Ab8RN6KNU85BmUriSJtvJIe5gMtK_SxYxbl22EJlqHhVhy2GZA"; 
+        const API_KEY = "SUA_CHAVE_API_AQUI"; 
 
         const ai = new GoogleGenAI({ apiKey: API_KEY });
-
-        // Memória do estado da aplicação
         let slidesAtivos = [];
         let indexAtual = 0;
 
-        // Esquema JSON para forçar o Gemini a responder exatamente na estrutura que precisamos
+        // Novo esquema JSON mapeando layouts dinâmicos para a IA responder
         const slideSchema = {
             type: Type.ARRAY,
-            description: "Lista de slides gerados para a apresentação.",
+            description: "Apresentação completa de slides com referências.",
             items: {
                 type: Type.OBJECT,
                 properties: {
-                    titulo: { 
+                    layout: { 
                         type: Type.STRING, 
-                        description: "Título curto do slide. Ex: '01 // Introdução'" 
+                        description: "Tipo de layout do slide: 'capa', 'texto', 'duas_colunas', 'tabela' ou 'referencias'." 
                     },
-                    conteudo: {
+                    titulo: { type: Type.STRING },
+                    topicos: { 
+                        type: Type.ARRAY, 
+                        items: { type: Type.STRING },
+                        description: "Usado para layouts 'capa', 'texto' ou 'referencias'."
+                    },
+                    colunaEsquerdaTitulo: { type: Type.STRING },
+                    colunaEsquerdaTexto: { type: Type.STRING },
+                    colunaDireitaTitulo: { type: Type.STRING },
+                    colunaDireitaTexto: { type: Type.STRING },
+                    tabelaDados: {
                         type: Type.ARRAY,
-                        description: "Lista contendo de 3 a 4 tópicos explicativos resumidos para o corpo do slide.",
-                        items: { type: Type.STRING }
+                        description: "Array de objetos para tabelas. Ex: [{'item': 'Métrica', 'valor': '85%'}]. Máximo 4 linhas.",
+                        items: {
+                            type: Type.OBJECT,
+                            properties: {
+                                coluna1: { type: Type.STRING, description: "Nome ou indicador" },
+                                coluna2: { type: Type.STRING, description: "Dado ou Resultado" }
+                            },
+                            required: ["coluna1", "coluna2"]
+                        }
                     }
                 },
-                required: ["titulo", "conteudo"]
+                required: ["layout", "titulo"]
             }
         };
 
-        // Função principal de chamada à API
-        async function gerarApresentacaoReal() {
+        async function gerarApresentacaoPro() {
             const temaInput = document.getElementById('promptInput').value.trim();
-            if (!temaInput) {
-                alert("Por favor, digite um tema para gerar a apresentação!");
-                return;
-            }
+            if (!temaInput) return alert("Digite um tema!");
 
             const loader = document.getElementById('loader');
-            document.getElementById('loaderText').innerText = "GeminAI processando e estruturando tópicos...";
             loader.style.display = 'flex';
 
             try {
-                // Chamada oficial da API configurada com Structured Outputs (JSON)
                 const response = await ai.models.generateContent({
                     model: 'gemini-2.5-flash',
-                    contents: `Crie uma apresentação de slides acadêmica e didática sobre o tema: "${temaInput}". A apresentação deve conter entre 4 e 5 slides sequenciais bem explicados.`,
+                    contents: `Gere um roteiro de apresentação executiva e acadêmica profunda sobre o tema: "${temaInput}". Crie entre 6 e 10 slides variando os layouts de forma inteligente. Inclua obrigatoriamente dados, estatísticas reais com fontes do mercado e o último slide deve ser de 'referencias' bibliográficas em formato acadêmico.`,
                     config: {
-                        // Instrução do sistema para garantir tom técnico e formatação limpa
-                        systemInstruction: "Você é um assistente especialista em criar roteiros de slides acadêmicos e tecnológicos estruturados. Nunca use markdown na resposta, envie apenas o JSON puro solicitado.",
+                        systemInstruction: "Você é um gerador de apresentações profissionais de alto nível. Varie os layouts entre 'capa', 'texto', 'duas_colunas', 'tabela' e 'referencias' para não ficar repetitivo. Forneça dados realistas e úteis.",
                         responseMimeType: "application/json",
                         responseSchema: slideSchema,
                     }
                 });
 
-                // Converte o texto JSON puro retornado pela API de volta para Objeto JavaScript
                 slidesAtivos = JSON.parse(response.text);
-                
                 indexAtual = 0;
                 renderizarSlide();
+                document.getElementById('btnExportar').style.display = 'block'; // Mostra botão de baixar
                 
             } catch (error) {
-                console.error("Erro na API do Gemini:", error);
-                alert("Ocorreu um erro ao gerar os slides. Verifique se sua chave API está correta ou dê uma olhada no console (F12).");
+                console.error(error);
+                alert("Erro ao gerar slides. Verifique a chave de API.");
             } finally {
                 loader.style.display = 'none';
             }
         }
 
-        // Renderiza os dados no HTML da sua Stage
+        // Renderiza dinamicamente na tela dependendo do Layout escolhido pela IA
         function renderizarSlide() {
             if (slidesAtivos.length === 0) return;
 
@@ -357,36 +194,106 @@
             const containerContador = document.getElementById('slideCounter');
 
             containerTitulo.innerText = slide.titulo;
+            let html = "";
 
-            let htmlContent = "<ul>";
-            slide.conteudo.forEach(topico => {
-                htmlContent += `<li>${topico}</li>`;
-            });
-            htmlContent += "</ul>";
-            containerCorpo.innerHTML = htmlContent;
+            if (slide.layout === 'duas_colunas') {
+                html = `
+                    <div class="two-columns">
+                        <div class="col-box">
+                            <h4>${slide.colunaEsquerdaTitulo || "Fato A"}</h4>
+                            <p>${slide.colunaEsquerdaTexto || ""}</p>
+                        </div>
+                        <div class="col-box">
+                            <h4>${slide.colunaDireitaTitulo || "Fato B"}</h4>
+                            <p>${slide.colunaDireitaTexto || ""}</p>
+                        </div>
+                    </div>`;
+            } else if (slide.layout === 'tabela' && slide.tabelaDados) {
+                html = `
+                    <table>
+                        <thead>
+                            <tr><th>Indicador / Conceito</th><th>Análise / Estatística</th></tr>
+                        </thead>
+                        <tbody>
+                            ${slide.tabelaDados.map(row => `<tr><td>${row.coluna1}</td><td>${row.coluna2}</td></tr>`).join('')}
+                        </tbody>
+                    </table>`;
+            } else { // 'texto', 'capa' ou 'referencias'
+                if (slide.topicos && slide.topicos.length > 0) {
+                    html = "<ul>" + slide.topicos.map(t => `<li>${t}</li>`).join('') + "</ul>";
+                } else {
+                    html = "<p>Processando conteúdo do slide...</p>";
+                }
+            }
 
+            containerCorpo.innerHTML = html;
             containerContador.innerText = `SLIDE: ${indexAtual + 1} / ${slidesAtivos.length}`;
         }
 
-        // Funções de Navegação adaptadas para o escopo do módulo
-        function avancar() {
-            if (indexAtual < slidesAtivos.length - 1) {
-                indexAtual++;
-                renderizarSlide();
-            }
+        // 🚀 FUNÇÃO QUE EXPORTA DIRETAMENTE PARA O POWERPOINT (.pptx)
+        function exportarParaPowerPoint() {
+            if (slidesAtivos.length === 0) return;
+
+            // Inicializa o construtor do PowerPoint
+            let pptx = new PptxGenJS();
+            
+            // Define que os slides serão em formato Widescreen (16:9)
+            pptx.layout = "LAYOUT_169";
+
+            slidesAtivos.forEach((slide) => {
+                let sld = pptx.addSlide();
+                
+                // Aplica a cor de fundo petróleo escura do seu layout nos slides do PowerPoint
+                sld.background = { color: "060B16" };
+
+                // Adiciona o Título do slide
+                sld.addText(slide.titulo, { 
+                    x: 0.5, y: 0.4, w: 9.0, h: 0.8, 
+                    fontSize: 28, bold: true, color: "00D2FF", fontFace: "Segoe UI" 
+                });
+
+                // Insere conteúdo baseado no tipo de layout estruturado
+                if (slide.layout === 'duas_colunas') {
+                    // Coluna Esquerda no PPTX
+                    sld.addText(`${slide.colunaEsquerdaTitulo}\n\n${slide.colunaEsquerdaTexto}`, {
+                        x: 0.5, y: 1.5, w: 4.3, h: 4.0, fontSize: 16, color: "94A3B8", fill: { color: "0F172A" }
+                    });
+                    // Coluna Direita no PPTX
+                    sld.addText(`${slide.colunaDireitaTitulo}\n\n${slide.colunaDireitaTexto}`, {
+                        x: 5.2, y: 1.5, w: 4.3, h: 4.0, fontSize: 16, color: "94A3B8", fill: { color: "0F172A" }
+                    });
+                } else if (slide.layout === 'tabela' && slide.tabelaDados) {
+                    // Converte os dados do JSON para as linhas da tabela do PPTX
+                    let linhasTabela = [["Indicador", "Análise"]];
+                    slide.tabelaDados.forEach(d => linhasTabela.push([d.coluna1, d.coluna2]));
+
+                    sld.addTable(linhasTabela, {
+                        x: 0.5, y: 1.5, w: 9.0, colW: [3.5, 5.5],
+                        border: { type: "solid", pt: 1, color: "00D2FF" },
+                        fill: { color: "0F172A" }, fontSize: 14, color: "F1F5F9"
+                    });
+                } else {
+                    // Layouts de tópicos padrões e referências
+                    let textoCorpo = slide.topicos ? slide.topicos.map(t => `• ${t}`).join("\n\n") : "";
+                    sld.addText(textoCorpo, { 
+                        x: 0.5, y: 1.5, w: 9.0, h: 4.5, 
+                        fontSize: 16, color: "94A3B8", fontFace: "Segoe UI", valign: "top" 
+                    });
+                }
+            });
+
+            // Faz o download do arquivo executável do PowerPoint no navegador
+            pptx.writeFile({ fileName: "Apresentacao_SlideAI.pptx" });
         }
 
-        function retroceder() {
-            if (indexAtual > 0) {
-                indexAtual--;
-                renderizarSlide();
-            }
-        }
+        // Navegadores e cliques
+        function avancar() { if (indexAtual < slidesAtivos.length - 1) { indexAtual++; renderizarSlide(); } }
+        function retroceder() { if (indexAtual > 0) { indexAtual--; renderizarSlide(); } }
 
-        // Event Listeners para acionar os botões
-        document.getElementById('btnGerar').addEventListener('click', gerarApresentacaoReal);
+        document.getElementById('btnGerar').addEventListener('click', gerarApresentacaoPro);
         document.getElementById('btnAvancar').addEventListener('click', avancar);
         document.getElementById('btnVoltar').addEventListener('click', retroceder);
+        document.getElementById('btnExportar').addEventListener('click', exportarParaPowerPoint);
     </script>
 </body>
 </html>
