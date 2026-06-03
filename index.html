@@ -110,7 +110,7 @@
             box-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
         }
 
-        /* Tela de Visualização do Slide (Proporção 16:9 aproximada) */
+        /* Tela de Visualização do Slide */
         .slide-stage {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -127,7 +127,6 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Elemento Decorativo Tech de Fundo do Slide */
         .slide-stage::before {
             content: "";
             position: absolute;
@@ -166,7 +165,6 @@
             position: relative;
         }
 
-        /* Customização dos marcadores para parecer tecnológico */
         .slide-body li::marker {
             color: var(--tech-cyan);
         }
@@ -253,91 +251,103 @@
     <div class="container">
         <div class="search-box">
             <input type="text" id="promptInput" placeholder="Digite o tema da aula (ex: Inteligência Artificial na Educação, Clonagem Genética)...">
-            <button onclick="simularGeracaoIA()">Gerar Apresentação</button>
+            <button id="btnGerar">Gerar Apresentação</button>
         </div>
 
         <div class="slide-stage" id="slideStage">
             <div class="loader-overlay" id="loader">
                 <div class="spinner"></div>
-                <div class="loader-text">GeminAI processando e estruturando tópicos...</div>
+                <div class="loader-text" id="loaderText">GeminAI processando e estruturando tópicos...</div>
             </div>
 
-            <div class="slide-title" id="slideTitle">Interface Pronta para Comandos</div>
+            <div class="slide-title" id="slideTitle">Interface Conectada ao Gemini</div>
             <div class="slide-body" id="slideBody">
-                <p>Insira um tema acima e clique em "Gerar". O sistema irá simular a resposta estruturada que receberemos do Gemini, aplicando automaticamente o design tecnológico azul petróleo focado em ambientes acadêmicos.</p>
+                <p>Insira um tema acima e clique em "Gerar". O sistema irá fazer uma requisição em tempo real para a API do Gemini, recebendo dados estruturados e montando seus slides automaticamente.</p>
             </div>
         </div>
 
         <div class="toolbar">
             <div class="slide-counter" id="slideCounter">SLIDE: 0 / 0</div>
             <div class="nav-buttons">
-                <button class="btn-action" onclick="retroceder()">◀ Voltar</button>
-                <button class="btn-action" onclick="avancar()">Avançar ▶</button>
+                <button class="btn-action" id="btnVoltar">◀ Voltar</button>
+                <button class="btn-action" id="btnAvancar">Avançar ▶</button>
             </div>
         </div>
     </div>
 
-    <script>
-        // Memória do estado da aplicação local
+    <script type="module">
+        import { GoogleGenAI, Type } from "https://esm.run/@google/genai";
+
+        // ⚠️ ADICIONE SUA CHAVE DE API DO GEMINI AQUI:
+        const API_KEY = "SUA_CHAVE_API_AQUI"; 
+
+        const ai = new GoogleGenAI({ apiKey: API_KEY });
+
+        // Memória do estado da aplicação
         let slidesAtivos = [];
         let indexAtual = 0;
 
-        // Função que simula o comportamento que o servidor + Gemini terão
-        function simularGeracaoIA() {
+        // Esquema JSON para forçar o Gemini a responder exatamente na estrutura que precisamos
+        const slideSchema = {
+            type: Type.ARRAY,
+            description: "Lista de slides gerados para a apresentação.",
+            items: {
+                type: Type.OBJECT,
+                properties: {
+                    titulo: { 
+                        type: Type.STRING, 
+                        description: "Título curto do slide. Ex: '01 // Introdução'" 
+                    },
+                    conteudo: {
+                        type: Type.ARRAY,
+                        description: "Lista contendo de 3 a 4 tópicos explicativos resumidos para o corpo do slide.",
+                        items: { type: Type.STRING }
+                    }
+                },
+                required: ["titulo", "conteudo"]
+            }
+        };
+
+        // Função principal de chamada à API
+        async function gerarApresentacaoReal() {
             const temaInput = document.getElementById('promptInput').value.trim();
             if (!temaInput) {
-                alert("Por favor, digite um tema para iniciar a simulação!");
+                alert("Por favor, digite um tema para gerar a apresentação!");
                 return;
             }
 
             const loader = document.getElementById('loader');
-            loader.style.display = 'flex'; // Exibe o loading tecnológico
+            document.getElementById('loaderText').innerText = "GeminAI processando e estruturando tópicos...";
+            loader.style.display = 'flex';
 
-            // Simula um atraso de rede de 1.5 segundos da inteligência artificial
-            setTimeout(() => {
-                // Monta uma apresentação simulada inteligente com base no tema do usuário
-                slidesAtivos = [
-                    {
-                        titulo: `01 // ${temaInput}`,
-                        conteudo: [
-                            "Introdução geral e contextualização do cenário atual.",
-                            "A relevância prática deste assunto no mercado e na academia.",
-                            "Visão geral dos conceitos fundamentais que serão destrinchados."
-                        ]
-                    },
-                    {
-                        titulo: "02 // Conceitos Fundamentais",
-                        conteudo: [
-                            "Mapeamento das primeiras definições e pilares teóricos estruturais.",
-                            "Variáveis críticas envolvidas no processo e suas correlações.",
-                            "Exemplos práticos de aplicação no dia a dia acadêmico."
-                        ]
-                    },
-                    {
-                        titulo: "03 // Arquitetura e Dinâmica",
-                        conteudo: [
-                            "Como os componentes interagem entre si em tempo real.",
-                            "Análise de fluxo, eficiência e gargalos operacionais.",
-                            "Estudo de caso focado em resolução de problemas complexos."
-                        ]
-                    },
-                    {
-                        titulo: "04 // Conclusão e Próximos Passos",
-                        conteudo: [
-                            "Síntese dos aprendizados obtidos durante a sessão.",
-                            "Questionamentos para debate e aprofundamento em grupo.",
-                            "Espaço aberto para perguntas e direcionamento para avaliações."
-                        ]
+            try {
+                // Chamada oficial da API configurada com Structured Outputs (JSON)
+                const response = await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: `Crie uma apresentação de slides acadêmica e didática sobre o tema: "${temaInput}". A apresentação deve conter entre 4 e 5 slides sequenciais bem explicados.`,
+                    config: {
+                        // Instrução do sistema para garantir tom técnico e formatação limpa
+                        systemInstruction: "Você é um assistente especialista em criar roteiros de slides acadêmicos e tecnológicos estruturados. Nunca use markdown na resposta, envie apenas o JSON puro solicitado.",
+                        responseMimeType: "application/json",
+                        responseSchema: slideSchema,
                     }
-                ];
+                });
 
+                // Converte o texto JSON puro retornado pela API de volta para Objeto JavaScript
+                slidesAtivos = JSON.parse(response.text);
+                
                 indexAtual = 0;
                 renderizarSlide();
-                loader.style.display = 'none'; // Desativa o loading
-            }, 1500);
+                
+            } catch (error) {
+                console.error("Erro na API do Gemini:", error);
+                alert("Ocorreu um erro ao gerar os slides. Verifique se sua chave API está correta ou dê uma olhada no console (F12).");
+            } finally {
+                loader.style.display = 'none';
+            }
         }
 
-        // Atualiza os textos na tela com efeito visual limpo
+        // Renderiza os dados no HTML da sua Stage
         function renderizarSlide() {
             if (slidesAtivos.length === 0) return;
 
@@ -346,10 +356,8 @@
             const containerCorpo = document.getElementById('slideBody');
             const containerContador = document.getElementById('slideCounter');
 
-            // Atualiza Título
             containerTitulo.innerText = slide.titulo;
 
-            // Monta lista de tópicos em HTML
             let htmlContent = "<ul>";
             slide.conteudo.forEach(topico => {
                 htmlContent += `<li>${topico}</li>`;
@@ -357,10 +365,10 @@
             htmlContent += "</ul>";
             containerCorpo.innerHTML = htmlContent;
 
-            // Atualiza Contador
             containerContador.innerText = `SLIDE: ${indexAtual + 1} / ${slidesAtivos.length}`;
         }
 
+        // Funções de Navegação adaptadas para o escopo do módulo
         function avancar() {
             if (indexAtual < slidesAtivos.length - 1) {
                 indexAtual++;
@@ -374,6 +382,11 @@
                 renderizarSlide();
             }
         }
+
+        // Event Listeners para acionar os botões
+        document.getElementById('btnGerar').addEventListener('click', gerarApresentacaoReal);
+        document.getElementById('btnAvancar').addEventListener('click', avancar);
+        document.getElementById('btnVoltar').addEventListener('click', retroceder);
     </script>
 </body>
 </html>
